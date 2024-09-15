@@ -12,6 +12,7 @@ export default function Editor() {
   const [currentFile, setCurrentFile] = useState({ owner: '', repo: '', path: '', sha: '', content: '' });
   const [error, setError] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [editingContent, setEditingContent] = useState('');
 
   useEffect(() => {
     let quill;
@@ -22,9 +23,7 @@ export default function Editor() {
           theme: 'snow'
         });
         setEditor(quill);
-        if (currentFile.content) {
-          quill.setText(currentFile.content);
-        }
+        quill.setText(editingContent);
       });
     }
 
@@ -33,7 +32,7 @@ export default function Editor() {
         quill.destroy();
       }
     };
-  }, [isEditing, currentFile.content]);
+  }, [isEditing, editingContent]);
 
   const loadFile = async () => {
     setError(null);
@@ -69,6 +68,9 @@ export default function Editor() {
   };
 
   const toggleEdit = () => {
+    if (!isEditing) {
+      setEditingContent(currentFile.content);
+    }
     setIsEditing(!isEditing);
   };
 

@@ -27,3 +27,6 @@ Now the Quill editor is displayed, but when I try to open a markdown file from a
 Next prompt for claude.ai:
 The app works great now.   I'm wondering if you could add one more addition.  Can you please add a feature where you can point to a specific owner/repo/filename combo and the default it to show the file rendered as markdown, but have an edit button that toggles the Quill editor, then upon saving, after notifying the user that the save was successful or not, it would revert back to the rendered page again?
 
+Next prompt for claude.ai:
+When you hit "Cancel" and don't want to actually edit, can you make it so the file's rendered markdown shows up instead of just the title ?
+
