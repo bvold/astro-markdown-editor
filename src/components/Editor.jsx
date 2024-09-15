@@ -9,6 +9,7 @@ const github = new GitHubService('your-github-token');
 export default function Editor() {
   const [editor, setEditor] = useState(null);
   const [currentFile, setCurrentFile] = useState({ owner: '', repo: '', path: '', sha: '' });
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     let quill;
@@ -28,6 +29,7 @@ export default function Editor() {
   }, []);
 
   const loadFile = async () => {
+    setError(null);
     try {
       const { content, sha } = await github.getFile(currentFile.owner, currentFile.repo, currentFile.path);
       if (editor) {
@@ -36,12 +38,13 @@ export default function Editor() {
       setCurrentFile(prev => ({ ...prev, sha }));
     } catch (error) {
       console.error('Error loading file:', error);
-      alert('Error loading file. Please check your inputs and try again.');
+      setError(`Error loading file: ${error.message}`);
     }
   };
 
   const saveFile = async () => {
     if (!editor) return;
+    setError(null);
     try {
       const content = editor.getText();
       await github.saveFile(
@@ -55,7 +58,7 @@ export default function Editor() {
       alert('File saved successfully!');
     } catch (error) {
       console.error('Error saving file:', error);
-      alert('Error saving file. Please try again.');
+      setError(`Error saving file: ${error.message}`);
     }
   };
 
@@ -82,6 +85,7 @@ export default function Editor() {
         />
         <button onClick={loadFile}>Load</button>
       </div>
+      {error && <div style={{color: 'red'}}>{error}</div>}
       <div id="editor" style={{height: '400px'}}></div>
       <button onClick={saveFile}>Save</button>
     </div>

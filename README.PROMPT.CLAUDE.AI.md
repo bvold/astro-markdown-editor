@@ -18,5 +18,10 @@ Now when I run, there is an error from Astro : 10:54:23 [ERROR] document is not 
     at /home/bryan_vold/src/astro-quill-github/astro-markdown-editor/node_modules/quill/core/emitter.js:7:3
     [...] See full stack trace in the browser, or rerun with --verbose.
 
+Next Prompt for claude.ai:
+
+Now the Quill editor is displayed, but when I try to open a markdown file from a github repo, it gives an error in the JavaScript console: Error fetching file from GitHub: ReferenceError: Buffer is not defined
+    at GitHubService.getFile (github.js:19:23)
+    at async loadFile (Editor.jsx:32:32)
 
 

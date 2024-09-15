@@ -16,7 +16,7 @@ export class GitHubService {
         ref: branch,
       });
 
-      const content = Buffer.from(response.data.content, 'base64').toString();
+      const content = atob(response.data.content);
       return { content, sha: response.data.sha };
     } catch (error) {
       console.error('Error fetching file from GitHub:', error);
@@ -31,7 +31,7 @@ export class GitHubService {
         repo,
         path,
         message,
-        content: Buffer.from(content).toString('base64'),
+        content: btoa(content),
         sha,
         branch,
       });
@@ -41,8 +41,3 @@ export class GitHubService {
     }
   }
 }
-
-// Usage example:
-// const github = new GitHubService('your-github-token');
-// const { content, sha } = await github.getFile('owner', 'repo', 'path/to/file.md');
-// await github.saveFile('owner', 'repo', 'path/to/file.md', 'New content', 'Update file', sha);
