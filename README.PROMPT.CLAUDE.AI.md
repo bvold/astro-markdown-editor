@@ -4,3 +4,19 @@ I would like a web application that I could host in a server in my network where
 Next prompt for claude.ai:
 In your last reply, you have a heading that says "Updated Editor Component", but it doesn't contain that - it instead contains a copy of the project setup steps.  Could you validate that you sent me the correct file and/or send me the updated editor component that uses the github.js component?
 
+Next prompt for claude.ai:
+
+Now when I run, there is an error from Astro : 10:54:23 [ERROR] document is not defined
+  Hint:
+    Browser APIs are not available on the server.
+
+    If the code is in a framework component, try to access these objects after rendering using lifecycle methods or use a client:only directive to make the component exclusively run on the client.
+
+    See https://docs.astro.build/en/guides/troubleshooting/#document-or-window-is-not-defined for more information.
+
+  Stack trace:
+    at /home/bryan_vold/src/astro-quill-github/astro-markdown-editor/node_modules/quill/core/emitter.js:7:3
+    [...] See full stack trace in the browser, or rerun with --verbose.
+
+
+

@@ -1,8 +1,6 @@
 // src/components/Editor.jsx
 
 import React, { useState, useEffect } from 'react';
-import Quill from 'quill';
-import 'quill/dist/quill.snow.css';
 import { GitHubService } from '../utils/github';
 
 // Note: In a production environment, you should use a secure method to handle authentication
@@ -13,18 +11,28 @@ export default function Editor() {
   const [currentFile, setCurrentFile] = useState({ owner: '', repo: '', path: '', sha: '' });
 
   useEffect(() => {
-    if (editor === null) {
-      const quill = new Quill('#editor', {
+    let quill;
+    import('quill').then((Quill) => {
+      import('quill/dist/quill.snow.css');
+      quill = new Quill.default('#editor', {
         theme: 'snow'
       });
       setEditor(quill);
-    }
+    });
+
+    return () => {
+      if (quill) {
+        quill.destroy();
+      }
+    };
   }, []);
 
   const loadFile = async () => {
     try {
       const { content, sha } = await github.getFile(currentFile.owner, currentFile.repo, currentFile.path);
-      editor.setText(content);
+      if (editor) {
+        editor.setText(content);
+      }
       setCurrentFile(prev => ({ ...prev, sha }));
     } catch (error) {
       console.error('Error loading file:', error);
@@ -33,6 +41,7 @@ export default function Editor() {
   };
 
   const saveFile = async () => {
+    if (!editor) return;
     try {
       const content = editor.getText();
       await github.saveFile(
