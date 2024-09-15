@@ -3,8 +3,8 @@
 import { Octokit } from "@octokit/rest";
 
 export class GitHubService {
-  constructor(token) {
-    this.octokit = new Octokit({ auth: token });
+  constructor() {
+    this.octokit = new Octokit({ auth: import.meta.env.PUBLIC_GITHUB_TOKEN });
   }
 
   async getFile(owner, repo, path, branch = 'main') {

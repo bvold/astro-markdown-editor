@@ -5,7 +5,7 @@ import { GitHubService } from '../utils/github';
 import MarkdownRenderer from './MarkdownRenderer';
 
 // Note: In a production environment, you should use a secure method to handle authentication
-const github = new GitHubService('your-github-token');
+const github = new GitHubService();
 
 export default function Editor() {
   const [editor, setEditor] = useState(null);
