@@ -34,3 +34,19 @@ Next prompt for claude.ai:
 
 3 more updates - 1) Can you make it so the GitHub Personal Access Token is not stored in file but is rather stored in a place that wouldn't get checked in (I know that in NextJS for example, you can use .env.local to store variables).  2) Can you update the app so that in the case of either cancelling after going to edit or successfully saving that respectively either the old content gets displayed or the updated content gets displayed?  Right now, it allows you to cancel and also to edit and save, but the next page after that is just a title "Markdown Editor" and I would like it to be content, ideally.  3) Can you add a way to get back to the owner/repo/filename screen button?
 
+Next prompt for claude.ai:
+
+None of the 3 cases display content after 1. cancelling the edit  2. saving the file or 3. changing file with the new button.  Is there something that we might be missing?
+
+Next prompt for claude.ai:
+
+When I go into edit mode and then don't make any changes, the cancel button exits me out, but the original content is not displayed.  Here is the Astro component that implements this : // src/components/Editor.jsx
+
+Next prompt for claude.ai:
+
+That didn't fix it.  When I hit cancel, it displays the title "Markdown Editor" and then the rest of the page is blank.  However, in the JavaScript console there is this error : chunk-NUMECXU6.js?v=16bdd837:16670 Uncaught TypeError: quill.destroy is not a function
+    at Editor.jsx:32:15
+
+Next prompt for claude.ai:
+
+
