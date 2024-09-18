@@ -35,8 +35,8 @@ export default function Editor() {
   const loadFile = async () => {
     setError(null);
     try {
-      const { content, sha } = await github.getFile(currentFile.owner, currentFile.repo, currentFile.path);
-      setCurrentFile(prev => ({ ...prev, sha, content }));
+      const fileData = await github.getFile(currentFile.owner, currentFile.repo, currentFile.path);
+      setCurrentFile(prev => ({ ...prev, ...fileData }));
       setIsFileLoaded(true);
       setIsEditing(false);
     } catch (error) {
@@ -58,7 +58,8 @@ export default function Editor() {
         'Update file via web editor',
         currentFile.sha
       );
-      setCurrentFile(prev => ({ ...prev, content }));
+      // After successful save, fetch the updated file info
+      await loadFile();
       setIsEditing(false);
       alert('File saved successfully!');
     } catch (error) {

@@ -49,4 +49,6 @@ That didn't fix it.  When I hit cancel, it displays the title "Markdown Editor" 
 
 Next prompt for claude.ai:
 
+There is one last issue.  I can now edit and save exactly one time, but if I try to again do an edit and then a save, the SHA doesn't match and it won't save.  Can you fix that, so after a save is done it either reads in the content from GitHub again to get the updated SHA code, or if it's possible, can you recalculate the SHA code so we don't need to re-read the contents?
+
 
