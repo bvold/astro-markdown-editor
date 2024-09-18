@@ -52,3 +52,6 @@ Next prompt for claude.ai:
 There is one last issue.  I can now edit and save exactly one time, but if I try to again do an edit and then a save, the SHA doesn't match and it won't save.  Can you fix that, so after a save is done it either reads in the content from GitHub again to get the updated SHA code, or if it's possible, can you recalculate the SHA code so we don't need to re-read the contents?
 
 
+Next prompt for claude.ai:
+
+Now saving works, but after the save, when it goes back to the content (markdown) page, it's the old content.  After a save, the content should either be refetched from GitHub or if you're clever, maybe you have a way to update it locally.  Can you fix the content the appears after a save so that it is the new content?

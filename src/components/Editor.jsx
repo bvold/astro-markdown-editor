@@ -1,42 +1,46 @@
 // src/components/Editor.jsx
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { GitHubService } from '../utils/github';
 import MarkdownRenderer from './MarkdownRenderer';
 
 const github = new GitHubService();
 
 export default function Editor() {
+  const [editor, setEditor] = useState(null);
   const [currentFile, setCurrentFile] = useState({ owner: '', repo: '', path: '', sha: '', content: '' });
   const [error, setError] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [isFileLoaded, setIsFileLoaded] = useState(false);
-  const quillRef = useRef(null);
-  const editorRef = useRef(null);
 
   useEffect(() => {
-    if (isEditing && !quillRef.current) {
+    let quill = null;
+    if (isEditing) {
       import('quill').then((Quill) => {
         import('quill/dist/quill.snow.css');
-        quillRef.current = new Quill.default(editorRef.current, {
+        quill = new Quill.default('#editor', {
           theme: 'snow'
         });
-        quillRef.current.setText(currentFile.content);
+        setEditor(quill);
+        
+        quill.setText(currentFile.content);
       });
     }
 
     return () => {
-      if (quillRef.current) {
-        quillRef.current = null;
+      if (quill) {
+        quill.disable(); // Disable the editor
+        quill = null; // Set the reference to null
+        setEditor(null); // Update the state
       }
     };
   }, [isEditing, currentFile.content]);
-
+  
   const loadFile = async () => {
     setError(null);
     try {
-      const fileData = await github.getFile(currentFile.owner, currentFile.repo, currentFile.path);
-      setCurrentFile(prev => ({ ...prev, ...fileData }));
+      const { content, sha } = await github.getFile(currentFile.owner, currentFile.repo, currentFile.path);
+      setCurrentFile(prev => ({ ...prev, sha, content }));
       setIsFileLoaded(true);
       setIsEditing(false);
     } catch (error) {
@@ -45,28 +49,41 @@ export default function Editor() {
     }
   };
 
-  const saveFile = async () => {
-    if (!quillRef.current) return;
+  const saveFile = useCallback(async () => {
+    if (!editor) {
+      setError("Editor not initialized");
+      return;
+    }
     setError(null);
     try {
-      const content = quillRef.current.getText();
-      await github.saveFile(
+      const newContent = editor.getText();
+      
+      const response = await github.saveFile(
         currentFile.owner,
         currentFile.repo,
         currentFile.path,
-        content,
+        newContent,
         'Update file via web editor',
         currentFile.sha
       );
-      // After successful save, fetch the updated file info
-      await loadFile();
-      setIsEditing(false);
-      alert('File saved successfully!');
+      
+      if (response && response.content) {
+        setCurrentFile(prev => ({ 
+          ...prev, 
+          content: newContent,  // Use the new content directly
+          sha: response.content.sha 
+        }));
+        setIsEditing(false);
+        alert('File saved successfully!');
+      } else {
+        console.error('Unexpected GitHub response:', response);
+        throw new Error('Unexpected response from GitHub');
+      }
     } catch (error) {
       console.error('Error saving file:', error);
-      setError(`Error saving file: ${error.message}`);
+      setError(`Error saving file: ${error.message}. Check console for more details.`);
     }
-  };
+  }, [editor, currentFile]);
 
   const toggleEdit = () => {
     setIsEditing(!isEditing);
@@ -118,7 +135,7 @@ export default function Editor() {
       )}
       {isEditing && (
         <div>
-          <div ref={editorRef} style={{height: '400px'}}></div>
+          <div id="editor" style={{height: '400px'}}></div>
           <button onClick={saveFile}>Save</button>
           <button onClick={toggleEdit}>Cancel</button>
         </div>
